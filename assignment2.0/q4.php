@@ -9,7 +9,7 @@ print "<h2>table: SELECT * FROM tblCourses WHERE"
 
 print '<table>';
 
-$query = "SELECT * FROM tblCourses WHERE fldCourseName = 'Database Design for the web'" ;
+$query = "SELECT pmkCourseId, fldCourseNumber, fldCourseName, fldDepartment, fldCredits FROM tblCourses WHERE fldCourseName = 'Database Design for the web';" ;
     
     $info2 = $thisDatabaseReader->select($query, "", 1, 0, 2, 0, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 1, 2, 0, false, false);

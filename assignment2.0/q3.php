@@ -4,12 +4,11 @@ include "top.php";
 
 print "<article>";
 
-print "<h2>table: SELECT distinct  * FROM tblSections WHERE "
-. "fldStart ='13:10:00'AND fldBuilding = 'KALKIN'; </h2>";
+print "<h2>table: SSELECT fnkCourseId, fldCRN, fnkTeacherNetId, fldMaxStudents, fldNumStudents, fldSection, fldType, fldStart, fldStop, fldDays, fldBuilding, fldRoom FROM tblSections WHERE fldStart ='13:10:00'AND fldBuilding = 'KALKIN' </h2>";
 
 print '<table>';
 
-$query = "SELECT distinct  * FROM tblSections WHERE fldStart ='13:10:00'AND fldBuilding = 'KALKIN'" ;
+$query = "SELECT fnkCourseId, fldCRN, fnkTeacherNetId, fldMaxStudents, fldNumStudents, fldSection, fldType, fldStart, fldStop, fldDays, fldBuilding, fldRoom FROM tblSections WHERE fldStart ='13:10:00'AND fldBuilding = 'KALKIN'" ;
     
     $info2 = $thisDatabaseReader->select($query, "", 1, 0, 4, 0, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 4, 0, false, false);

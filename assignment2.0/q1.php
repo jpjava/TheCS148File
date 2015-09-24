@@ -5,7 +5,7 @@ include "top.php";
 print "<article>";
 
 
-print '<h2>table: SELECT pmkNetID FROM tblTeachers </h2>';
+print '<h2>table: SELECT pmkNetId FROM tblTeachers </h2>';
 
 print '<table>';
 
@@ -13,7 +13,7 @@ print '<table>';
     
     $i=0;
     //now print out each record
-    $query = 'SELECT * FROM ' . $tableName;
+    $query = 'SELECT pmkNetId FROM ' . $tableName;
     $info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
     //foreach ($info2 as $info ) 
      //   {print $info[0]."<br>";}

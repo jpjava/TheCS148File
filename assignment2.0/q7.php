@@ -4,8 +4,7 @@ include "top.php";
 
 print "<article>";
 
-print "<h2>table: SELECT distinct  * FROM tblSections WHERE "
-. "fldStart ='13:10:00'AND fldBuilding = 'KALKIN'; </h2>";
+print "<h2>table: SELECT DISTINCT fldDepartment FROM tblCourses </h2>";
 $query = "SELECT DISTINCT fldDepartment FROM tblCourses" ;
 $info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
 echo count($info2);

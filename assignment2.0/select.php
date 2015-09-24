@@ -33,27 +33,27 @@ nitely sure either him or his TA is reading this">
 
 <a href="q1.php">q01</a> 
 <p></p>
-<a href="q2.php/">q02</a> 
+<a href="q2.php">q02</a> 
 <p></p>
-<a href="q3.php/">q03</a> 
+<a href="q3.php">q03</a> 
 <p></p>
-<a href="q4.php/">q04</a>
+<a href="q4.php">q04</a>
 <p></p>
-<a href="q5.php/">q05</a>
+<a href="q5.php">q05</a>
 <p></p>
-<a href="q6.php/">q06</a>
+<a href="q6.php">q06</a>
 <p></p>
-<a href="q7.php/">q07</a> 
+<a href="q7.php">q07</a> 
 <p></p>
-<a href="q8.php/">q08</a>
+<a href="q8.php">q08</a>
 <p></p>
-<a href="q9.php/">q09</a> 
+<a href="q9.php">q09</a> 
 <p></p>
-<a href="q10.php/">q10</a>
+<a href="q10.php">q10</a>
 <p></p>
-<a href="q11.php/">q11</a>
+<a href="q11.php">q11</a>
 <p></p>
-<a href="q12.php/">q12</a> 
+<a href="q12.php">q12</a> 
 
 
 <?php

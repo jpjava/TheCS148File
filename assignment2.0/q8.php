@@ -8,7 +8,7 @@ print "<h2>table: SELECT fldBuilding, COUNT(fldSection) FROM tblSections GROUP B
 
 print '<table>';
 
-$query = "SELECT fldBuilding, COUNT(*) FROM tblSections GROUP BY fldBuilding" ;
+$query = "SELECT fldBuilding, COUNT(fldSection) FROM tblSections GROUP BY fldBuilding" ;
     
    $info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
    // $info2 = $thisDatabaseReader->testquery($query, "", 0, 0, 0, 0, false, false);

@@ -34,6 +34,7 @@ function securityCheck($path_parts, $yourURL, $form = false) {
     $whiteListPages[] = "q10.php";
     $whiteListPages[] = "q11.php";
      $whiteListPages[] = "select.php";
+     
     
 
     $whiteListFolders = array();
