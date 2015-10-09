@@ -4,19 +4,29 @@ include "top.php";
 
 print "<article>";
 
-print "<h2>table: SELECT fldCourseName FROM tblCourses WHERE  "
-. "fldDepartment !='CS' AND fldCourseName LIKE '%data%'; </h2>";
-
 print '<table>';
 
-$query = "SELECT fldCourseName FROM tblCourses WHERE  "
-. "fldDepartment !='CS' AND fldCourseName LIKE '%data%';" ;
+$query = "select fldSalary, tblTeachers.fldFirstName, tblTeachers.fldPhone from tblTeachers WHERE fldSalary<(SELECT AVG(fldSalary) FROM tblTeachers) order by fldLastName ASC";
     
-    $info2 = $thisDatabaseReader->select($query, "", 1, 2, 4, 0, false, false);
+    $info2 = $thisDatabaseReader->select($query, "", 1, 1, 0, 1, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 1, 2, 0, false, false);
     
+    print "<h2>table:" .$query . "</h2>";
+     
+     print "<h2>Total Records: " . count($info2) . "</h2>";
+     
+     //print r
+    
+    $debug = false; 
+    
+    if ($debug) 
+    {
+        print "<p>My array<p><pre> "; print_r($info2); print "</pre></p>";
+    }
+    
+    
     $i =0; 
-    $columns = 1; 
+    $columns = 3; 
     $highlight = 0; // used to highlight alternate rows
     foreach ($info2 as $rec) {
         $highlight++;

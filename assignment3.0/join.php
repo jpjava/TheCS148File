@@ -16,7 +16,7 @@ nitely sure either him or his TA is reading this">
             padding: 0.5em;
         }
         .small {
-            width: 400px;
+            width: 500px;
         }
         figcaption {
             color: #800080;                                                                                                      
@@ -27,30 +27,35 @@ nitely sure either him or his TA is reading this">
     </style>
 </head>
 <body>
-    <figure class = "img-left small">
-        <img class="small" alt="This is a great photograph!" src="swiss.jpg">
-        <figcaption id="creditsuise">Credit Suisse</figcaption>
-    </figure>
-
-<h1>Justin Pappano</h1>
-
-
-<p>assignment 1.0</p>
-<a href="assignment1.0/">Assignment 1.0</a> 
-<a href="css/base.css/">base.css</a>
-<a href='css/reset.css/'>reset.css</a>
-
-<p>assignment 2.0</p>
-<a href="assignment2.0/">Assignment 2.0</a>
-<a href="assignment2.0/select.php">select</a>
-
-
-<p>assignment 3.0</p>
-<a href ="assignment3.0/">Assignment 3.0</a>
-<a href="assignment3.0/select.php">select</a>
+    
 
 
 
-</body>
+<a href="q1.php">q01</a> 
+<p></p>
+<a href="q2.php">q02</a> 
+<p></p>
+<a href="q3.php">q03</a> 
+<p></p>
+<a href="q4.php">q04</a>
+<p></p>
+<a href="q5.php">q05</a>
+<p></p>
+<a href="q6.php">q06</a>
+<p></p>
+<a href="q7.php">q07</a> 
+<p></p>
+<a href="q8.php">q08</a>
+<p></p>
+<a href="q9.php">q09</a> 
+<p></p>
+<a href="q10.php">q10</a>
+<p></p>
+<a href="q11.php">q11</a>
+<p></p>
+<a href="q12.php">q12</a> 
 
-</html>
+
+<?php
+include "footer.php";
+?>

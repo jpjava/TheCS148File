@@ -4,16 +4,30 @@ include "top.php";
 
 print "<article>";
 
-print "<h2>table: SSELECT fnkCourseId, fldCRN, fnkTeacherNetId, fldMaxStudents, fldNumStudents, fldSection, fldType, fldStart, fldStop, fldDays, fldBuilding, fldRoom FROM tblSections WHERE fldStart ='13:10:00'AND fldBuilding = 'KALKIN' </h2>";
-
 print '<table>';
 
-$query = "SELECT fnkCourseId, fldCRN, fnkTeacherNetId, fldMaxStudents, fldNumStudents, fldSection, fldType, fldStart, fldStop, fldDays, fldBuilding, fldRoom FROM tblSections WHERE fldStart ='13:10:00'AND fldBuilding = 'KALKIN'" ;
+$query = "SELECT distinct fldCourseName,`fldDays`, `fldStart`, `fldStop`FROM tblTeachers left JOIN tblSections ON pmkNetId = fnkTeacherNetId inner JOIN tblCourses ON pmkCourseId = tblSections.fnkCourseId 
+WHERE concat(fldFirstName,' ',fldLastName)= 'Jackie Lynn Horton'" ;
     
-    $info2 = $thisDatabaseReader->select($query, "", 1, 0, 4, 0, false, false);
+    $info2 = $thisDatabaseReader->select($query, "", 0, 0, 4, 0, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 4, 0, false, false);
+ 
+    print "<h2>table:" .$query . "</h2>";
+     
+     print "<h2>Total Records: " . count($info2) . "</h2>";
+     
+     //print r
+    
+    $debug = false; 
+    
+    if ($debug) 
+    {
+        print "<p>My array<p><pre> "; print_r($info2); print "</pre></p>";
+    }
+    
+    
     $i =0; 
-    $columns = 12; 
+    $columns = 3; 
     $highlight = 0; // used to highlight alternate rows
     foreach ($info2 as $rec) {
         $highlight++;

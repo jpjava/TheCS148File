@@ -4,17 +4,29 @@ include "top.php";
 
 print "<article>";
 
-print "<h2>table: SELECT * FROM tblCourses WHERE"
-. " fldCourseName = 'Database Design for the web' </h2>";
-
 print '<table>';
 
-$query = "SELECT pmkCourseId, fldCourseNumber, fldCourseName, fldDepartment, fldCredits FROM tblCourses WHERE fldCourseName = 'Database Design for the web';" ;
+$query = "SELECT DISTINCT fldLastName, fldFirstName,  fnkSectionId FROM tblStudents LEFT JOIN tblEnrolls ON tblEnrolls.fnkStudentId = tblStudents.pmkStudentId INNER JOIN tblCourses ON pmkCourseId = fnkCourseId WHERE fldDepartment LIKE '%CS%' AND fldCourseNumber LIKE '%148%' GROUP BY fldFirstName, fldLastname" ;
     
-    $info2 = $thisDatabaseReader->select($query, "", 1, 0, 2, 0, false, false);
+    $info2 = $thisDatabaseReader->select($query, "", 1, 1, 4, 0, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 1, 2, 0, false, false);
+  
+        print "<h2>table:" .$query . "</h2>";
+     
+     print "<h2>Total Records: " . count($info2) . "</h2>";
+     
+     //print r
+    
+    $debug = false; 
+    
+    if ($debug) 
+    {
+        print "<p>My array<p><pre> "; print_r($info2); print "</pre></p>";
+    }
+    
+    
     $i =0; 
-    $columns = 5; 
+    $columns = 3; 
     $highlight = 0; // used to highlight alternate rows
     foreach ($info2 as $rec) {
         $highlight++;

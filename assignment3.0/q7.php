@@ -4,13 +4,29 @@ include "top.php";
 
 print "<article>";
 
-print "<h2>table: SELECT DISTINCT fldDepartment FROM tblCourses </h2>";
-$query = "SELECT DISTINCT fldDepartment FROM tblCourses" ;
-$info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
-echo count($info2);
 print '<table>';
 
+$query = "select fldLastname, fldFirstName, (select AVG(fldGrade) from tblEnrolls)
+from tblStudents left join tblEnrolls
+on tblEnrolls.fnkStudentId = tblStudents.pmkStudentId
+WHERE tblEnrolls.fldGrade>(select AVG(fldGrade) from tblEnrolls) and fldState = 'VT'" ;
+$info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
 
+
+
+print "<h2>table:" .$query . "</h2>";
+     
+     print "<h2>Total Records: " . count($info2) . "</h2>";
+     
+     //print r
+    
+    $debug = false; 
+    
+    if ($debug) 
+    {
+        print "<p>My array<p><pre> "; print_r($info2); print "</pre></p>";
+    }
+    
     
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 4, 0, false, false);
     $i =0; 

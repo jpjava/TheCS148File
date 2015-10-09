@@ -1,6 +1,6 @@
 <?php
-
 include "top.php";
+
 
 print "<article>";
 
@@ -15,10 +15,10 @@ print "<h2>table: SELECT DISTINCT fldBuilding, "
 
 print '<table>';
 
-$query = "SELECT DISTINCT fldBuilding, sum(fldNumStudents), fldDays  FROM tblSections WHERE fldDays LIKE '%F%' GROUP BY fldBuilding ORDER BY sum(fldNumStudents) DESC" ;
+$query = "select pmkStudentId, fldFirstName, fldLastName, fldStreetAddress, fldCity, fldState, fldZip, fldGender from tblStudents order by fldLastName, fldFirstName  ASC limit 10  offset 999;" ;
     
-   // $info2 = $thisDatabaseReader->select($query, "", 1, 1, 2, 0, false, false);
-    $info2 = $thisDatabaseReader->testquery($query, "", 1, 1, 2, 0, false, false);
+    $info2 = $thisDatabaseReader->select($query, "", 0, 1, 0, 0, false, false);
+    //$info2 = $thisDatabaseReader->testquery($query, "", 1, 1, 2, 0, false, false);
     $i =0; 
     $columns = 3; 
     //$highlight = 0; // used to highlight alternate rows
@@ -42,5 +42,15 @@ $query = "SELECT DISTINCT fldBuilding, sum(fldNumStudents), fldDays  FROM tblSec
    // print '</aside>';
 
 print '</article>';
+
+$variable = array_keys($array-variable);
+print $variable; 
+
+
+
+
+
+
+
 include "footer.php";
 ?>
