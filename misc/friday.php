@@ -1,56 +1,67 @@
+
 <?php
 include "top.php";
+//##############################################################################
+//
+// This page lists the records based on the query given
+// 
+// i tend to print out each array to see what is inside it. this helps with my
+ //understanding
+
+$startrecord =10;
+$endrecord=999; 
+if (isset($_GET['startRecord']))
+{
+    $startrecord = $_GET['startRecord'];
+ }
+
+ if (isset($_GET['endRecord']))
+{
+    $endrecord = $_GET['endRecord'];
+ }
+ if ($debug) {
+   print "<p>Contents of the fields array<pre>";
+   print_r($fields);
+    print "</pre></p>";
+}
+
+$off = $startrecord; 
+$yo= $endrecord;
 
 
-print "<article>";
-
-print "<p> I would verify the results by making sure that the numbers for each building "
-. " are at least bigger for both Wednesday and Friday </p>";
-
-print "<h2>table: SELECT DISTINCT fldBuilding, "
-. "sum(fldNumStudents), fldDays  FROM tblSections WHERE fldDays LIKE '%F%' GROUP BY "
-        . "fldBuilding ORDER BY sum(fldNumStudents) DESC"
-        . " </h2>";
-
-
+$query = "select pmkStudentId, fldFirstName,     fldLastName, fldStreetAddress, fldCity, fldState, fldZip, fldGender from tblStudents"
+        . " order by fldLastName, fldFirstName  ASC limit " 
+       .$off . ','. $yo;
+$records = $thisDatabaseReader->select($query, "", 0, 1, 0, 0, false, false);
+//$info2 = $thisDatabaseReader->testquery($query, "", 1, 1, 2, 0, false, false);
+// the array $records is both associative and indexed, column zero is associative
+// which you see in teh above print_r statement
+$fields = array_keys($records[0]);
+$labels = array_filter($fields, "is_string");
+$columns = count($labels);
 print '<table>';
-
-$query = "select pmkStudentId, fldFirstName, fldLastName, fldStreetAddress, fldCity, fldState, fldZip, fldGender from tblStudents order by fldLastName, fldFirstName  ASC limit 10  offset 999;" ;
-    
-    $info2 = $thisDatabaseReader->select($query, "", 0, 1, 0, 0, false, false);
-    //$info2 = $thisDatabaseReader->testquery($query, "", 1, 1, 2, 0, false, false);
-    $i =0; 
-    $columns = 3; 
-    //$highlight = 0; // used to highlight alternate rows
-    foreach ($info2 as $rec) {
-        //$highlight++;
-        //if ($highlight % 2 != 0) {
-          //  $style = ' odd ';
-        //} else {
-          //  $style = ' even ';
-       // }
-        print '<tr>';
-        //print '<tr class="' . $style . '">';
-       //for ($i = 0; $i < $columns; $i++) {
-            print '<td>' . $rec[$i] . '</td>';
-        //}
-        print '</tr>';
+print '<tr><th colspan="' . $columns . '">' . $query . '</th></tr>';
+// print out the column headings, note i always use a 3 letter prefix
+// and camel case like pmkCustomerId and fldFirstName
+print '<tr>';
+foreach ($labels as $label) {
+    print '<th>';
+    $camelCase = preg_split('/(?=[A-Z])/', substr($label, 3));
+    foreach ($camelCase as $one) {
+        print $one . " ";
     }
-
-    // all done
-    print '</table>';
-   // print '</aside>';
-
-print '</article>';
-
-$variable = array_keys($array-variable);
-print $variable; 
-
-
-
-
-
-
-
+    print '</th>';
+}
+print '</tr>';
+//now print out each record
+foreach ($records as $record) {
+    print '<tr>';
+    for ($i = 0; $i < $columns; $i++) {
+        print '<td>'. $record[$i] . '</td>';
+    }
+    print '</tr>';
+}
+// all done
+print '</table>';
 include "footer.php";
 ?>
