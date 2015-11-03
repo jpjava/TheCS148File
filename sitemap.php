@@ -50,6 +50,18 @@ nitely sure either him or his TA is reading this">
 <a href="assignment3.0/select.php">select</a>
 
 
+<p> advising</p>
+<a href ="advising/">advising</a> <a href="advising/er.pdf">ER_Diagram</a>
+
+
+
+<p>Final Project</p>
+<a href = "FinalProject/">Final Project</a>
+<a href ="FinalProject/index.php">index.php</a>
+
+
+
+
 
 </body>
 
