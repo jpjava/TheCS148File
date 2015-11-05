@@ -56,7 +56,6 @@ nitely sure either him or his TA is reading this">
 
 
 <p>Final Project</p>
-<a href = "FinalProject/">Final Project</a>
 <a href ="FinalProject/index.php">index.php</a>
 
 
