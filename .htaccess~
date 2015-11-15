@@ -4,13 +4,10 @@ php_value error_reporting 2039
 
 
 AuthType WebAuth
-
-
-require user jpappano
-
-
+require user  jpappano
 satisfy any
 order allow,deny
 </Files>
+
 
 
