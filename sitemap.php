@@ -56,7 +56,7 @@ nitely sure either him or his TA is reading this">
 
 
 <p>Final Project</p>
-<a href ="FinalProject/index.php">index.php</a>
+<a href ="assignment10/index.php">index.php</a>
 
 
 
