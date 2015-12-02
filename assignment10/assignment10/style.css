@@ -5,7 +5,7 @@
 * {
     font-size: 13pt;
 
-  background-color: #FFFFFF;
+  background-color: #000000;
     color: #ff0000;
     font-weight:bold;
 }
@@ -124,6 +124,9 @@ figure figcaption {
 
 
 /* ===================  Navigation Section  ================================= */
+
+
+
 
 /* ===================  Home Page        ==================================== */
 /* -------------------------------------------------------------------------- */
@@ -267,7 +270,7 @@ label {
     font-weight: bold;
 }
 
-/*#form {
+#form {
     background-image:url(stars.jpg);
 }
 #frmRegister {
@@ -288,4 +291,4 @@ label {
 #errors ol li{
     color: #ff5555;
 }
-*/
+

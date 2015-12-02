@@ -36,10 +36,6 @@ function securityCheck($path_parts, $yourURL, $form = false) {
     $whiteListPages[] = "join.php";
     $whiteListPages[] = "top.php";
     $whiteListPages[] = "footer.php";
-    $whiteListPages[] = "GuestForm.php";
-    $whiteListPages[] = "HotelInfo.php";
-    $whiteListPages[] = "SeeAllGuests.php";
-    
     
      
     
