@@ -33,10 +33,10 @@ $yourURL = $domain . $phpSelf;
 $email = "jpappano@uvm.edu";
 $firstName = "";
 $lastName = "";
-$gender = "NO";
+$$radConfirm = "NO";
 $vegan = false;
 $grandBuffet = false;
-$skiing = false;
+$$peanutFree = false;
 $hotelList = "Hotel California";
 
 
@@ -60,6 +60,11 @@ $firstNameERROR = false;
 $errorMsg = array();
 //this is for the csv file
 $dataRecord = array();
+//Below is a separate data Record used for a separate insert statement
+$secondDataRecord = array();
+
+//third data record for getting the hotel primary key
+$thirdDataRecord = array();
 
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -90,15 +95,20 @@ if (isset($_POST["btnSubmit"])) {
 
     $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $lastName;
-    $gender = htmlentities($_POST["radGender"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $gender;
+    $radConfirm = htmlentities($_POST["radConfirm"], ENT_QUOTES, "UTF-8");
+    $dataRecord[] = $radConfirm;
+    $secondDataRecord[] = $radConfirm;
+
+
+    $hotelList = htmlentities($_POST["lstHotelName"], ENT_QUOTES, "UTF-8");
+    
+
+
 
 
 //Initialize: SECTION 1c.
 //Sanitize: SECTION 2c.
-
-
-   // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
+    // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
     //$dataRecord[] = $hotelList;
 
 
@@ -130,6 +140,10 @@ if (isset($_POST["btnSubmit"])) {
     $dataRecord[] = $grandBuffet;
     $dataRecord[] = $vegan;
     $dataRecord[] = $peanutFree;
+
+    $secondDataRecord[] = $grandBuffet;
+    $secondDataRecord[] = $vegan;
+    $secondDataRecord[] = $peanutFree;
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -166,19 +180,43 @@ if (isset($_POST["btnSubmit"])) {
 //
         // SECTION: 2e Save Data
 //Robert Erickson makes my life so damn hard and I am sick of it!
-//This code below saves the data to a CSV file
+//This code below saves the data to a CSV file and a database
 
-        $query = "INSERT INTO tblGuest (fldEmail, fldFirstName, fldLastName, fldPresent,"
-                . "fldPeanutFree, fldMealGrandBuffet, fldMeal) VALUES (?, ?, ?, ?, ?, ?, ?)";
-//('" .$firstName ."')";
+         $query3 = "SELECT pnkHotelId from tblHotel WHERE " . $hotelList . "= fldHotelName";
+        print $query3; 
+        $thirdDataRecord[] = $query3;
+         // $info = $thisDatabaseReader->testquery($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
+          $info1 = $thisDatabaseReader->select($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
+                $dataRecord[] = "".$info1."";
+                
+                
+               $query = "INSERT INTO tblGuest (fldEmail, fldFirstName, fldLastName, fldPresent,"
+                . "fldPeanutFree, fldMealGrandBuffet, fldMeal,fnkHotelId) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+                
+   
+
+        print_r($dataRecord);
+        print "<P>sql:" . $query . "<P>";
+       
+        $info = $thisDatabaseWriter->insert($query, $dataRecord, 0, 0, 0, 0, false, false);
+        //$info = $thisDatabaseReader->testquery($theInsert, $dataRecord, 0, 0, 0, 0, false, false);
+      
+        
+        //$info3 = $thisDatabaseWriter->insert($query4, );
+        
+        print "<p>count:" . count($dataRecord);
+
+        
+       
+        $query2 = "INSERT INTO Attending (fldPresent, fldGrandBuffet, fldPeanutFree, fldVegan) VALUES (?, ?, ?, ?)";
+
+        $info2 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 0, 0, 0, 0, false, false);
+        //$info2 = $thisDatabaseReader->testquery($theInsert, $dataRecord, 0, 0, 0, 0, false, false);
         print_r($dataRecord);
         print "<P>sql:" . $query . "<P>";
 
-        $info2 = $thisDatabaseWriter->insert($query, $dataRecord, 0, 0, 0, 0, false, false);
 
-        print "<p>count:" . count($dataRecord);
 
-       // $info2 = $thisDatabaseReader->testquery($query, $dataRecord, 0, 0, 0, 0, false, false);
 
 
         $fileExt = ".csv";
@@ -235,60 +273,60 @@ if (isset($_POST["btnSubmit"])) {
 
 <article id="main">
 
-    <?php
+<?php
 //####################################
 //
 // SECTION 3a.
-    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print "<h1>Your Request has ";
+if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+    print "<h1>Your Request has ";
 
-        if (!$mailed) {
-            print "not ";
-        }
+    if (!$mailed) {
+        print "not ";
+    }
 
-        print "been processed</h1>";
+    print "been processed</h1>";
 
-        print "<p>A copy of this message has ";
-        if (!$mailed) {
-            print "not ";
-        }
-        print "been sent</p>";
-        print "<p>To: " . $email . "</p>";
-        print "<p>Mail Message:</p>";
+    print "<p>A copy of this message has ";
+    if (!$mailed) {
+        print "not ";
+    }
+    print "been sent</p>";
+    print "<p>To: " . $email . "</p>";
+    print "<p>Mail Message:</p>";
 
-        print $message;
-    } else {
+    print $message;
+} else {
 
 
-        //####################################
-        //
+    //####################################
+    //
         // SECTION 3b Error Messages
-        //
+    //
         // display any error messages before we print out the form
 
-        if ($errorMsg) {
-            print '<div id="errors">';
-            print "<ol>\n";
-            foreach ($errorMsg as $err) {
-                print "<li>" . $err . "</li>\n";
-            }
-            print "</ol>\n";
-            print '</div>';
+    if ($errorMsg) {
+        print '<div id="errors">';
+        print "<ol>\n";
+        foreach ($errorMsg as $err) {
+            print "<li>" . $err . "</li>\n";
         }
-        //####################################
-        //
+        print "</ol>\n";
+        print '</div>';
+    }
+    //####################################
+    //
         // SECTION 3b Error Messages
-        //
+    //
         // 
-        //####################################
-        //
+    //####################################
+    //
         // SECTION 3c html Form
-        //
+    //
         /* Display the HTML form. note that the action is to this same page. $phpSelf
-          is defined in top.php
+      is defined in top.php
 
-         */
-        ?>
+     */
+    ?>
 
 
         <form action= "<?php print $phpSelf; ?>"
@@ -309,11 +347,11 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="text" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
                                    tabindex="120" maxlength="45" placeholder="Enter a valid email address"
-                                   <?php
-                                   if ($emailERROR) {
-                                       print 'class="mistake"';
-                                   }
-                                   ?>
+    <?php
+    if ($emailERROR) {
+        print 'class="mistake"';
+    }
+    ?>
                                    onfocus="this.select()" 
                                    autofocus>
                         </label>
@@ -321,11 +359,11 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="text" id="txtFirstName" name="txtFirstName"
                                    value="<?php print $firstName; ?>"
                                    tabindex="100" maxlength="45" placeholder="Enter your first name"
-                                   <?php
-                                   if ($firstNameERROR) {
-                                       print 'class="mistake"';
-                                   }
-                                   ?>
+    <?php
+    if ($firstNameERROR) {
+        print 'class="mistake"';
+    }
+    ?>
                                    onfocus="this.select()"
                                    autofocus>
                         </label>
@@ -333,11 +371,11 @@ if (isset($_POST["btnSubmit"])) {
                             <input type="text" id="txtLastName" name="txtLastName" 
                                    value="<?php print $lastName; ?>"
                                    tabindex="100" maxlength="45" placeholder="Enter your last name"
-                                   <?php
-                                   if ($lastNameERROR) {
-                                       print 'class="mistake"';
-                                   }
-                                   ?>
+    <?php
+    if ($lastNameERROR) {
+        print 'class="mistake"';
+    }
+    ?>
                                    onfocus="this.select()"
                                    autofocus>
                         </label>
@@ -350,30 +388,30 @@ if (isset($_POST["btnSubmit"])) {
                                   id="radNo"
                                   name="radConfirm"
                                   value="NO"
-                                  <?php
-                                  if ($gender == "NO") {
-                                      print 'checked';
-                                  }
-                                  ?>
+    <?php
+    if ($radConfirm == "NO") {
+        print 'checked';
+    }
+    ?>
                                   tabindex="330">NO</label>
                     <label><input type="radio"
                                   id="radYes"
                                   name="radConfirm"
                                   value="YES"
-                                  <?php
-                                  if ($gender == "YES") {
-                                      print 'checked';
-                                  }
-                                  ?>
+    <?php
+    if ($radConfirm == "YES") {
+        print 'checked';
+    }
+    ?>
                                   tabindex="340">YES</label>
                     <label><input type="radio"
                                   id="radMaybe"
                                   name="radConfirm"
                                   value="MAYBE"
-                                  <?php
-                                  if ($gender == "MAYBE")
-                                      print 'checked'
-                                      ?>
+    <?php
+    if ($radConfirm == "MAYBE")
+        print 'checked'
+        ?>
                                   tabindex="350" > MAYBE </label>
 
 
@@ -385,116 +423,163 @@ if (isset($_POST["btnSubmit"])) {
                                   id="chkVegan"
                                   name="chkVegan"
                                   value="Vegan"
-                                  <?php
-                                  if ($vegan) {
-                                      print 'checked';
-                                  }
-                                  ?>
+    <?php
+    if ($vegan) {
+        print 'checked';
+    }
+    ?>
                                   tabindex="420">Vegan</label>
                     <label><input type="checkbox"
                                   id="chkGrandBuffet"
                                   name="chkGrandBuffet"
                                   value="Grand Buffet"
-                                  <?php
-                                  if ($grandBuffet) {
-                                      print 'checked';
-                                  }
-                                  ?>
+    <?php
+    if ($grandBuffet) {
+        print 'checked';
+    }
+    ?>
                                   tabindex="430">Grand Buffet</label>
                     <label><input type="checkbox"
                                   id="chkPeanutFree"
                                   name="chkPeanutFree"
                                   value="Peanut-free & gluten-free"
-                                  <?php
-                                  if ($peanutFree) {
-                                      print 'checked';
-                                  }
-                                  ?>
+    <?php
+    if ($peanutFree) {
+        print 'checked';
+    }
+    ?>
                                   tabindex="440">Peanut-free & gluten-free</label>
                 </fieldset>
-                <?php
-                $hotelList = "Hotel California";
-                require_once('../bin/Database.php');
-                $dbUserName = get_current_user() . '_reader';
 
-                $whichPass = "r";
+                $  
 
-                $dbName = strtoupper(get_current_user()) . '_FinalProject';
 
-                $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
 
-                $query = "SELECT DISTINCT fldHotelName ";
-                $query .= "FROM tblHotel ";
-                $query .= "ORDER BY fldHotelName";
-                //So I am going to user RObert Erickson's select function with
-                //my own variable
-                // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
-                //$dataRecord[] = $hotelList;
-                $hotelLists = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
+                <!Here is the start of the Hotel list Box !>
+                <fieldset class ="Hotel">   
+    <?php
+    $hotelList = "Hotel California";
+    require_once('../bin/Database.php');
+    $dbUserName = get_current_user() . '_reader';
 
-                print "<h2>List box built from Database</h2>";
+    $whichPass = "r";
 
-                print '<label for ="lstHotelName">What Hotel Will you by staying at?? ';
-                print '<select id = "lstHotelName"';
-                print '     name = "lstHotelName"';
-                print '     tabindex="300">';
+    $dbName = strtoupper(get_current_user()) . '_FinalProject';
 
-                foreach ($hotelLists as $row) {
-                    print '<option ';
-                    if ($hotelLists == $row["fldHotelName"])
-                        print " selected='selected' ";
+    $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
 
-                    print 'value ="' . $row["fldHotelName"] . '">' . $row["fldHotelName"];
+    $query = "SELECT DISTINCT fldHotelName ";
+    $query .= "FROM tblHotel ";
+    $query .= "ORDER BY fldHotelName";
+    //So I am going to user RObert Erickson's select function with
+    //my own variable
+    // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
+    //$dataRecord[] = $hotelList;
+    $hotelLists = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
 
-                    print '</option>';
+    print "<h2>List box built from Database</h2>";
+
+    print '<label for ="lstHotelName">What Hotel Will you by staying at?? ';
+    print '<select id = "lstHotelName"';
+    print '     name = "lstHotelName"';
+    print '     tabindex="300">';
+
+    foreach ($hotelLists as $row) {
+        print '<option ';
+        if ($hotelLists == $row["fldHotelName"])
+            print " selected='selected' ";
+
+        print 'value ="' . $row["fldHotelName"] . '">' . $row["fldHotelName"];
+
+        print '</option>';
+    }
+    print '</select></label>';
+    print '</form>';
+    ?>
+                    <fieldset>
+                        <!--
+                        
+                                        <fieldset class = "listbox">
+                                            <label for = "lsthotelList">Hotel You are staying at</label>
+                                            <select id = "lsthotelList"
+                                                    name = "lsthotelList"
+                                                    tabindex = "520" >
+                                                <option <?php
+                if ($hotelList == "Green Mountain Inn") {
+                    print " selected ";
                 }
-                print '</select></label>';
-                print '</form>';
-                ?>
-                <!--
-                
-                                <fieldset class = "listbox">
-                                    <label for = "lsthotelList">Hotel You are staying at</label>
-                                    <select id = "lsthotelList"
-                                            name = "lsthotelList"
-                                            tabindex = "520" >
-                                        <option <?php
-            if ($hotelList == "Hotel California") {
-                print " selected ";
-            }
-                ?>
-                                            value="Hotel California">Hotel California</option>
-                
-                                        <option <?php
-            if ($hotelList == "Bates Motel") {
-                print " selected ";
-            }
-                ?>
-                                            value="Bates Motel"
-                                            >Bates Motel</option>
-                
-                                        <option <?php
-            if ($hotelList == "Robert's Bed & Breakfast") {
-                print " selected ";
-            }
-                ?>
-                                            value="Robert's Bed & Breakfast"
-                                            >Robert's Bed & Breakfast</option>
-                
-                                        <fieldset class="buttons">
-                                            <legend></legend>-->
-                <input type="submit" id="btnSubmit" name="btnSubmit" value="Register" tabindex="900" class="button">
-            </fieldset> <!-- ends buttons -->
+    ?>
+                                                    value="Hotel California">Hotel California</option>
+                        
+                                                <option <?php
+                    if ($hotelList == "Stowe Mountain Lodge") {
+                        print " selected ";
+                    }
+    ?>
+                                                    value="Bates Motel"
+                                                    >Bates Motel</option>
+                        
+                                                <option <?php
+                    if ($hotelList == "Robert's Bed & Breakfast") {
+                        print " selected ";
+                    }
+    ?>
+                                                    value="Robert's Bed & Breakfast"
+                                                    >Robert's Bed & Breakfast</option>
+                        
+                                                <fieldset class="buttons">
+                                                    <legend></legend>-->
+                        <fieldset class ="gift">   
+    <?php
+    $giftList = "Breville BES870XL Barista Express Espresso Machine";
+    require_once('../bin/Database.php');
+    $dbUserName = get_current_user() . '_reader';
 
-            </fieldset> <!-- Ends Wrapper -->
-        </form>
+    $whichPass = "r";
+
+    $dbName = strtoupper(get_current_user()) . '_FinalProject';
+
+    $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
+
+    $query = "SELECT DISTINCT fldGift FROM tblGift ORDER BY fldGift";
+    //So I am going to user RObert Erickson's select function with
+    //my own variable
+    // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
+    //$dataRecord[] = $hotelList;
+    $giftList = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
+
+    print "<h2>please choose a gift</h2>";
+    print '<label for ="lstGift">What Gift Will You Be Giving?? ';
+    print '<select id = "lstGift"';
+    print '     name = "lstGift"';
+    print '     tabindex="300">';
+
+    foreach ($giftList as $row) {
+        print '<option ';
+        if ($giftListLists == $row["fldGift"])
+            print " selected='selected' ";
+
+        print 'value ="' . $row["fldGift"] . '">' . $row["fldGift"];
+
+        print '</option>';
+    }
+    print '</select></label>';
+    print '</form>';
+    ?>
+
+
+                            <input type="submit" id="btnSubmit" name="btnSubmit" value="Register" tabindex="900" class="button">
+                        </fieldset> <!-- ends buttons -->
+
+                    </fieldset> <!-- Ends Wrapper -->
+                    </form>
 
 
 
-    </article>
+                    </article>
     <?php
 }
 include "footer.php";
 ?>
 
-</body>
+                </body>

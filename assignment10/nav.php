@@ -13,7 +13,7 @@
         if ($path_parts['filename'] == "HotelInfo.php") {
             print '<li class="activePage">HotelInfo.php</li>';
         } else {
-            print '<li><a href="HotelInfo.php">Display Tables</a></li>';
+            print '<li><a href="HotelInfo.php">Hotel Information</a></li>';
         }
         
         if ($path_parts['filename'] == "GuestForm.php") {
@@ -23,6 +23,7 @@
         }
        
         ?>
+        
     </ol>
 </nav>
 <!-- #################### Ends Main Navigation    ########################## -->

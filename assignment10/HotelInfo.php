@@ -6,28 +6,30 @@ print "<article>";
 
 print '<table>';
 
-$query = "SELECT distinct fldHotelHotel, fldPhone, fldAddress, fldWebsite FROM tblHotel";
+$query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite FROM tblHotel";
     
     $info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 4, 0, false, false);
  
     print "<h2>table:" .$query . "</h2>";
      
-     print "<h2>Total Records: " . count($info2) . "</h2>";
+     print "<h2>Total Hotel Options: " . count($info2) . "</h2>";
+     
+            
      
      //print r
     
-    $debug = false; 
+    $debug = true; 
     
     if ($debug) 
     {
         print "<p>My array<p><pre> "; print_r($info2); print "</pre></p>";
     }
     
-    
-    $i =0; 
-    $columns = 3; 
+ 
+    $columns = 4; 
     $highlight = 0; // used to highlight alternate rows
+    print '<tr><th>Hotel Name<th><th>Phone#</th><th>Address</th><th>Website</th></tr>';   
     foreach ($info2 as $rec) {
         $highlight++;
         if ($highlight % 2 != 0) {
@@ -35,9 +37,26 @@ $query = "SELECT distinct fldHotelHotel, fldPhone, fldAddress, fldWebsite FROM t
         } else {
             $style = ' even ';
         }
+        
         print '<tr class="' . $style . '">';
-       for ($i = 0; $i < $columns; $i++) {
-            print '<td>' . $rec[$i] . '</td>';
+        
+        
+       for ($i = 0; $i <= $columns; $i++) 
+      {
+           if ($i <=2) 
+           {
+            print  '<td>    ' . $rec[$i] . '</td>';
+           }
+           else if ($i ==3)
+            
+               {
+               print  '<td><a href =   "'.$rec[$i] .'">Website</a>  </td>';
+           }
+           else if ($i ==4)
+           {
+               print '<td><img src= "'.$rec[$i] .'"> </td>';
+           }
+        
         }
         print '</tr>';
     }
