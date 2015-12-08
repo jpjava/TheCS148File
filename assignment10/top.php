@@ -19,7 +19,7 @@ require_once('lib/custom-functions.php');
         <link rel="stylesheet" href="style.css" type="text/css" media="screen">
 
         <?php
-        $debug = true;
+        $debug = FALSE;
 
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
         //
@@ -68,7 +68,7 @@ require_once('lib/custom-functions.php');
 
         $path_parts = pathinfo($phpSelf);
 
-        if ($debug) {
+        if ($debug = FALSE) {
             print "<p>Domain" . $domain;
             print "<p>php Self" . $phpSelf;
             print "<p>Path Parts<pre>";
@@ -88,7 +88,7 @@ require_once('lib/custom-functions.php');
         // I have an array of check boxes so i would have to sanatize that, here
         // i skip it.
 
-        $spaceAllowedPages = array("form.php");
+        $spaceAllowedPages = array("GuestForm.php");
 
         if (!empty($_GET)) {
             $_GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);

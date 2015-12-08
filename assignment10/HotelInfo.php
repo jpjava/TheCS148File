@@ -11,7 +11,7 @@ $query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite, fldPicture FROM
     $info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 4, 0, false, false);
  
-    print "<h2>table:" .$query . "</h2>";
+    print "<h2>Here are the Great Hotels in the Area!</h2>";
      
      print "<h2>Total Hotel Options: " . count($info2) . "</h2>";
      
@@ -19,7 +19,7 @@ $query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite, fldPicture FROM
      
      //print r
     
-    $debug = true; 
+    $debug = FALSE; 
     
     if ($debug) 
     {

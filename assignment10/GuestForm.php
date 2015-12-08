@@ -80,7 +80,7 @@ if (isset($_POST["btnSubmit"])) {
     // SECTION: 2a Security
 // 
 
-    if (!securityCheck($path_parts, $yourURL, true)) {
+    if (!securityCheck($path_parts, $yourURL, TRUE)) {
         $msg = "<p>Sorry you cannot access this page. ";
         $msg.="Security breach detected and reported</p>";
         die($msg);
@@ -103,8 +103,7 @@ if (isset($_POST["btnSubmit"])) {
     $secondDataRecord[] = $radConfirm;
 
 
-    $hotelList = htmlentities($_POST["lstHotelName"], ENT_QUOTES, "UTF-8");
-
+    $hotelId = (int) htmlentities($_POST["lstHotelName"], ENT_QUOTES, "UTF-8");
 
 
 
@@ -177,17 +176,10 @@ if (isset($_POST["btnSubmit"])) {
         // SECTION: 2e Save Data
 //Robert Erickson makes my life so damn hard and I am sick of it!
 //This code below saves the data to a CSV file and a database
-        print '$$$$$$$';
-        print $hotelList;
-        print '@@@@@@@@@';
-        $query3 = "SELECT pnkHotelId FROM tblHotel WHERE " . $hotelList . "= fldHotelName";
 
-        $thirdDataRecord[] = $hotelList;
-        // $info = $thisDatabaseReader->testquery($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
-        $info1 = $thisDatabaseReader->select($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
-        $dataRecord[] = $info1['pnkHotelId'];
-
-
+        
+        $dataRecord[] = $hotelId;
+        
         $query = "INSERT INTO tblGuest (fldEmail, fldFirstName, fldLastName, fldPresent,"
                 . " fldMealGrandBuffet, fldMeal,fldPeanutFree,fnkHotelId) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
         print "right below here";
@@ -196,23 +188,29 @@ if (isset($_POST["btnSubmit"])) {
 
         $info = $thisDatabaseWriter->insert($query, $dataRecord, 0, 0, 0, 0, false, false);
         //$info = $thisDatabaseReader->testquery($theInsert, $dataRecord, 0, 0, 0, 0, false, false);
-        //$info3 = $thisDatabaseWriter->insert($query4, );
-
+        $primaryKey = $thisDatabaseWriter->lastInsert();
+        
+        
+        $secondDataRecord[] = $primaryKey; 
+         $thirdDataRecord[] = $primaryKey;
+         $thirdDataRecord[] = $hotelList;
+        
         print "<p>count:" . count($dataRecord);
+        
+            
+        
+        
 
-
-
-        $query2 = "INSERT INTO Attending (fldPresent, fldGrandBuffet, fldPeanutFree, fldVegan) VALUES (?, ?, ?, ?)";
+        $query2 = "INSERT INTO Attending (fldPresent, fldGrandBuffet, fldPeanutFree, fldVegan, fnkid) VALUES (?, ?, ?, ?, ?)";
 
         $info2 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 0, 0, 0, 0, false, false);
         //$info2 = $thisDatabaseReader->testquery($theInsert, $dataRecord, 0, 0, 0, 0, false, false);
-        print_r($dataRecord);
-        print "<P>sql:" . $query . "<P>";
-
-
-//$query4= "INSERT INTO "
-//        $info3 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 0, 0, 0, 0, false, false);
-
+       
+        $info3 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 1, 0, 0, 0, false, false);
+        $query4= "UPDATE `tblGift` SET `fnkGuestId`= (?) WHERE fldGift = (?)";
+         
+         $info4 = $thisDatabaseWriter->update($query4, $thirdDataRecord, 0, 0, 0, 0, false, false);
+         
 
         $fileExt = ".csv";
         $myFileName = "data/registration";
@@ -463,7 +461,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
     $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
 
-    $query7 = "SELECT DISTINCT fldHotelName FROM tblHotel ORDER BY fldHotelName";
+    $query7 = "SELECT DISTINCT fldHotelName, pnkHotelId FROM tblHotel ORDER BY fldHotelName";
     //So I am going to user RObert Erickson's select function with
     //my own variable
     // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
@@ -482,7 +480,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
         if ($hotelLists == $row["fldHotelName"])
             print " selected='selected' ";
 
-        print 'value ="' . $row["fldHotelName"] . '">' . $row["fldHotelName"];
+        print 'value ="' . $row["pnkHotelId"] . '">' . $row["fldHotelName"];
 
         print '</option>';
     }
@@ -549,7 +547,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                         foreach ($giftList as $row) {
                             print '<option ';
-                            if ($giftListLists == $row["fldGift"])
+                            if ($giftList == $row["fldGift"])
                                 print " selected='selected' ";
 
                             print 'value ="' . $row["fldGift"] . '">' . $row["fldGift"];
