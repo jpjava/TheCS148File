@@ -6,7 +6,7 @@ print "<article>";
 
 print '<table>';
 
-$query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite FROM tblHotel";
+$query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite, fldPicture FROM tblHotel";
     
     $info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 4, 0, false, false);
@@ -29,7 +29,7 @@ $query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite FROM tblHotel";
  
     $columns = 4; 
     $highlight = 0; // used to highlight alternate rows
-    print '<tr><th>Hotel Name<th><th>Phone#</th><th>Address</th><th>Website</th></tr>';   
+    print '<tr><th>Hotel</th><th>Phone#</th><th>Address</th><th>Website</th><th>Pic</th></tr>';   
     foreach ($info2 as $rec) {
         $highlight++;
         if ($highlight % 2 != 0) {
@@ -54,7 +54,7 @@ $query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite FROM tblHotel";
            }
            else if ($i ==4)
            {
-               print '<td><img src= "'.$rec[$i] .'"> </td>';
+               print '<figure><img src= "'.$rec[$i] .'"></figure';
            }
         
         }
@@ -66,18 +66,6 @@ $query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite FROM tblHotel";
     print '</aside>';
 
 print '</article>';
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

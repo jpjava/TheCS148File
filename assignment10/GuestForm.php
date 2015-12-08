@@ -36,7 +36,7 @@ $lastName = "";
 $$radConfirm = "NO";
 $vegan = false;
 $grandBuffet = false;
-$$peanutFree = false;
+$peanutFree = false;
 $hotelList = "Hotel California";
 
 
@@ -66,6 +66,9 @@ $secondDataRecord = array();
 //third data record for getting the hotel primary key
 $thirdDataRecord = array();
 
+$fourthDataRecord = array(); 
+
+$fourthDataRecord[] = $hotelList; 
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -101,7 +104,7 @@ if (isset($_POST["btnSubmit"])) {
 
 
     $hotelList = htmlentities($_POST["lstHotelName"], ENT_QUOTES, "UTF-8");
-    
+
 
 
 
@@ -110,32 +113,25 @@ if (isset($_POST["btnSubmit"])) {
 //Sanitize: SECTION 2c.
     // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
     //$dataRecord[] = $hotelList;
+//    $vegan = true;    // checked
+//    $grandBuffet = false; // not cehcked
+//    $peanutFree = false;
 
-
-
-
-
-
-
-    $vegan = true;    // checked
-    $grandBuffet = false; // not cehcked
-    $peanutFree = false;
-    print $peanutFree . $grandBuffet;
 
     if (isset($_POST["chkvegan"])) {
-        $vegan = true;
+        $vegan = TRUE;
     } else {
-        $vegan = false;
+        $vegan = FALSE;
     }
-    if (isset($_POST["chkgrandBuffet"])) {
+    if (isset($_POST["chkGrandBuffet"])) {
         $grandBuffet = true;
     } else {
-        $grandBuffet = false;
+        $grandBuffet = FALSE;
     }
     if (isset($_POST["chkpeanutFree"])) {
-        $peanutFree = true;
+        $peanutFree = TRUE;
     } else {
-        $peanutFree = false;
+        $peanutFree = FALSE;
     }
     $dataRecord[] = $grandBuffet;
     $dataRecord[] = $vegan;
@@ -181,33 +177,31 @@ if (isset($_POST["btnSubmit"])) {
         // SECTION: 2e Save Data
 //Robert Erickson makes my life so damn hard and I am sick of it!
 //This code below saves the data to a CSV file and a database
+        print '$$$$$$$';
+        print $hotelList;
+        print '@@@@@@@@@';
+        $query3 = "SELECT pnkHotelId FROM tblHotel WHERE " . $hotelList . "= fldHotelName";
 
-         $query3 = "SELECT pnkHotelId from tblHotel WHERE " . $hotelList . "= fldHotelName";
-        print $query3; 
-        $thirdDataRecord[] = $query3;
-         // $info = $thisDatabaseReader->testquery($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
-          $info1 = $thisDatabaseReader->select($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
-                $dataRecord[] = "".$info1."";
-                
-                
-               $query = "INSERT INTO tblGuest (fldEmail, fldFirstName, fldLastName, fldPresent,"
-                . "fldPeanutFree, fldMealGrandBuffet, fldMeal,fnkHotelId) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
-                
-   
+        $thirdDataRecord[] = $hotelList;
+        // $info = $thisDatabaseReader->testquery($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
+        $info1 = $thisDatabaseReader->select($query3, $thirdDataRecord, 0, 0, 0, 0, false, false);
+        $dataRecord[] = $info1['pnkHotelId'];
 
+
+        $query = "INSERT INTO tblGuest (fldEmail, fldFirstName, fldLastName, fldPresent,"
+                . " fldMealGrandBuffet, fldMeal,fldPeanutFree,fnkHotelId) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+        print "right below here";
         print_r($dataRecord);
         print "<P>sql:" . $query . "<P>";
-       
+
         $info = $thisDatabaseWriter->insert($query, $dataRecord, 0, 0, 0, 0, false, false);
         //$info = $thisDatabaseReader->testquery($theInsert, $dataRecord, 0, 0, 0, 0, false, false);
-      
-        
         //$info3 = $thisDatabaseWriter->insert($query4, );
-        
+
         print "<p>count:" . count($dataRecord);
 
-        
-       
+
+
         $query2 = "INSERT INTO Attending (fldPresent, fldGrandBuffet, fldPeanutFree, fldVegan) VALUES (?, ?, ?, ?)";
 
         $info2 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 0, 0, 0, 0, false, false);
@@ -216,7 +210,8 @@ if (isset($_POST["btnSubmit"])) {
         print "<P>sql:" . $query . "<P>";
 
 
-
+//$query4= "INSERT INTO "
+//        $info3 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 0, 0, 0, 0, false, false);
 
 
         $fileExt = ".csv";
@@ -398,20 +393,20 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                                   id="radYes"
                                   name="radConfirm"
                                   value="YES"
-    <?php
-    if ($radConfirm == "YES") {
-        print 'checked';
-    }
-    ?>
+                                  <?php
+                                  if ($radConfirm == "YES") {
+                                      print 'checked';
+                                  }
+                                  ?>
                                   tabindex="340">YES</label>
                     <label><input type="radio"
                                   id="radMaybe"
                                   name="radConfirm"
                                   value="MAYBE"
-    <?php
-    if ($radConfirm == "MAYBE")
-        print 'checked'
-        ?>
+                                  <?php
+                                  if ($radConfirm == "MAYBE")
+                                      print 'checked';
+                                  ?>
                                   tabindex="350" > MAYBE </label>
 
 
@@ -422,7 +417,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                     <label><input type="checkbox"
                                   id="chkVegan"
                                   name="chkVegan"
-                                  value="Vegan"
+                                  value="YES"
     <?php
     if ($vegan) {
         print 'checked';
@@ -432,22 +427,22 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                     <label><input type="checkbox"
                                   id="chkGrandBuffet"
                                   name="chkGrandBuffet"
-                                  value="Grand Buffet"
-    <?php
-    if ($grandBuffet) {
-        print 'checked';
-    }
-    ?>
+                                  value="YES"
+                                  <?php
+                                  if ($grandBuffet) {
+                                      print 'checked';
+                                  }
+                                  ?>
                                   tabindex="430">Grand Buffet</label>
                     <label><input type="checkbox"
                                   id="chkPeanutFree"
                                   name="chkPeanutFree"
-                                  value="Peanut-free & gluten-free"
-    <?php
-    if ($peanutFree) {
-        print 'checked';
-    }
-    ?>
+                                  value="YES"
+                                  <?php
+                                  if ($peanutFree) {
+                                      print 'checked';
+                                  }
+                                  ?>
                                   tabindex="440">Peanut-free & gluten-free</label>
                 </fieldset>
 
@@ -458,7 +453,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <!Here is the start of the Hotel list Box !>
                 <fieldset class ="Hotel">   
     <?php
-    $hotelList = "Hotel California";
+    $hotelList = "";
     require_once('../bin/Database.php');
     $dbUserName = get_current_user() . '_reader';
 
@@ -468,14 +463,12 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
     $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
 
-    $query = "SELECT DISTINCT fldHotelName ";
-    $query .= "FROM tblHotel ";
-    $query .= "ORDER BY fldHotelName";
+    $query7 = "SELECT DISTINCT fldHotelName FROM tblHotel ORDER BY fldHotelName";
     //So I am going to user RObert Erickson's select function with
     //my own variable
     // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
     //$dataRecord[] = $hotelList;
-    $hotelLists = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
+    $hotelLists = $thisDatabase->select($query7, "", 0, 1, 0, 0, false, false);
 
     print "<h2>List box built from Database</h2>";
 
@@ -508,64 +501,65 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 if ($hotelList == "Green Mountain Inn") {
                     print " selected ";
                 }
-    ?>
+                ?>
                                                     value="Hotel California">Hotel California</option>
                         
                                                 <option <?php
-                    if ($hotelList == "Stowe Mountain Lodge") {
-                        print " selected ";
-                    }
-    ?>
+                        if ($hotelList == "Stowe Mountain Lodge") {
+                            print " selected ";
+                        }
+                        ?>
                                                     value="Bates Motel"
                                                     >Bates Motel</option>
                         
                                                 <option <?php
-                    if ($hotelList == "Robert's Bed & Breakfast") {
-                        print " selected ";
-                    }
-    ?>
+                        if ($hotelList == "Robert's Bed & Breakfast") {
+                            print " selected ";
+                        }
+                        ?>
                                                     value="Robert's Bed & Breakfast"
                                                     >Robert's Bed & Breakfast</option>
                         
                                                 <fieldset class="buttons">
                                                     <legend></legend>-->
                         <fieldset class ="gift">   
-    <?php
-    $giftList = "Breville BES870XL Barista Express Espresso Machine";
-    require_once('../bin/Database.php');
-    $dbUserName = get_current_user() . '_reader';
+                        <?php
+                        $giftList = "Breville BES870XL Barista Express Espresso Machine";
+                        require_once('../bin/Database.php');
+                        $dbUserName = get_current_user() . '_reader';
 
-    $whichPass = "r";
+                        $whichPass = "r";
 
-    $dbName = strtoupper(get_current_user()) . '_FinalProject';
+                        $dbName = strtoupper(get_current_user()) . '_FinalProject';
 
-    $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
+                        $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
 
-    $query = "SELECT DISTINCT fldGift FROM tblGift ORDER BY fldGift";
-    //So I am going to user RObert Erickson's select function with
-    //my own variable
-    // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
-    //$dataRecord[] = $hotelList;
-    $giftList = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
+                        $query = "SELECT DISTINCT fldGift FROM tblGift ORDER BY fldGift";
+                        //So I am going to user RObert Erickson's select function with
+                        //my own variable
+                        // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
+                        //$dataRecord[] = $hotelList;
+                        $giftList = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
 
-    print "<h2>please choose a gift</h2>";
-    print '<label for ="lstGift">What Gift Will You Be Giving?? ';
-    print '<select id = "lstGift"';
-    print '     name = "lstGift"';
-    print '     tabindex="300">';
+                        print "<h2>please choose a gift</h2>";
+                        print '<label for ="lstGift">What Gift Will You Be Giving?? ';
+                        print '<select id = "lstGift"';
+                        print '     name = "lstGift"';
+                        print '     tabindex="300">';
 
-    foreach ($giftList as $row) {
-        print '<option ';
-        if ($giftListLists == $row["fldGift"])
-            print " selected='selected' ";
+                        foreach ($giftList as $row) {
+                            print '<option ';
+                            if ($giftListLists == $row["fldGift"])
+                                print " selected='selected' ";
 
-        print 'value ="' . $row["fldGift"] . '">' . $row["fldGift"];
+                            print 'value ="' . $row["fldGift"] . '">' . $row["fldGift"];
 
-        print '</option>';
-    }
-    print '</select></label>';
-    print '</form>';
-    ?>
+                            print '</option>';
+                        }
+                        print '</select></label>';
+                        print '</form>';
+                        
+                        ?>
 
 
                             <input type="submit" id="btnSubmit" name="btnSubmit" value="Register" tabindex="900" class="button">
@@ -577,6 +571,9 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
 
                     </article>
+                    <figure class = "robert">
+                        <img class="small" alt="This is a great photograph!" src="ROBERT.png">
+                    </figure>
     <?php
 }
 include "footer.php";

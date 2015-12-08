@@ -115,6 +115,11 @@ figure img {
     display: block;
     border-style: dashed;
     border-color: #F80000;
+    float: right;
+position: absolute;
+top: 800px;
+width: 300px;
+right: 30px;
 }
 figure figcaption {
     display: block;
@@ -299,4 +304,12 @@ table
 tr
 {
     
+}
+#robert
+{
+   float: right;
+position: absolute;
+top: 800px;
+width: 300px;
+right: 30px;
 }
