@@ -39,6 +39,7 @@ function securityCheck($path_parts, $yourURL, $form = false) {
     $whiteListPages[] = "GuestForm.php";
     $whiteListPages[] = "HotelInfo.php";
     $whiteListPages[] = "SeeAllGuests.php";
+    $whiteListPages[] = "whatGiftsAreChosen.php";
     
     
      

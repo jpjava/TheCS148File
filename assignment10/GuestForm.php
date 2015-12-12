@@ -9,7 +9,7 @@ include "nav.php";
 
 
 
-$debug = false;
+$debug = FALSE;
 if (isset($_GET["debug"])) {//only do this in a classroom environment
     $debug = true;
 }
@@ -33,11 +33,11 @@ $yourURL = $domain . $phpSelf;
 $email = "jpappano@uvm.edu";
 $firstName = "";
 $lastName = "";
-$$radConfirm = "NO";
+$radConfirm = "NO";
 $vegan = false;
 $grandBuffet = false;
 $peanutFree = false;
-$hotelList = "Hotel California";
+
 
 
 
@@ -66,9 +66,9 @@ $secondDataRecord = array();
 //third data record for getting the hotel primary key
 $thirdDataRecord = array();
 
-$fourthDataRecord = array(); 
+$fourthDataRecord = array();
 
-$fourthDataRecord[] = $hotelList; 
+$fourthDataRecord[] = $hotelList;
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -99,25 +99,22 @@ if (isset($_POST["btnSubmit"])) {
     $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $lastName;
     $radConfirm = htmlentities($_POST["radConfirm"], ENT_QUOTES, "UTF-8");
-    $dataRecord[] = $radConfirm;
+    //$dataRecord[] = $radConfirm;
     $secondDataRecord[] = $radConfirm;
 
 
     $hotelId = (int) htmlentities($_POST["lstHotelName"], ENT_QUOTES, "UTF-8");
 
-
+    $giftLists = htmlentities($_POST["lstGift"], ENT_QUOTES, "UTF-8");
 
 
 //Initialize: SECTION 1c.
 //Sanitize: SECTION 2c.
     // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
     //$dataRecord[] = $hotelList;
-//    $vegan = true;    // checked
-//    $grandBuffet = false; // not cehcked
-//    $peanutFree = false;
-
-
-    if (isset($_POST["chkvegan"])) {
+    $vegan = '0';    // checked
+//BOB LOOK HERE
+    if (isset($_POST["chkVegan"])) {
         $vegan = TRUE;
     } else {
         $vegan = FALSE;
@@ -127,18 +124,18 @@ if (isset($_POST["btnSubmit"])) {
     } else {
         $grandBuffet = FALSE;
     }
-    if (isset($_POST["chkpeanutFree"])) {
+    if (isset($_POST["chkPeanutFree"])) {
         $peanutFree = TRUE;
     } else {
         $peanutFree = FALSE;
     }
-    $dataRecord[] = $grandBuffet;
-    $dataRecord[] = $vegan;
-    $dataRecord[] = $peanutFree;
-
+  
+//BOB STOP LOOKING
+    
     $secondDataRecord[] = $grandBuffet;
-    $secondDataRecord[] = $vegan;
+
     $secondDataRecord[] = $peanutFree;
+    $secondDataRecord[] = $vegan;
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -165,7 +162,7 @@ if (isset($_POST["btnSubmit"])) {
     if (!$errorMsg) {
         print_r($dataRecord);
 
-        if ($debug) {
+        if ($debug = TRUE) {
             print "<p>Form is Validated</p>";
         }
 
@@ -177,40 +174,44 @@ if (isset($_POST["btnSubmit"])) {
 //Robert Erickson makes my life so damn hard and I am sick of it!
 //This code below saves the data to a CSV file and a database
 
-        
+
         $dataRecord[] = $hotelId;
-        
-        $query = "INSERT INTO tblGuest (fldEmail, fldFirstName, fldLastName, fldPresent,"
-                . " fldMealGrandBuffet, fldMeal,fldPeanutFree,fnkHotelId) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+
+        $query = "INSERT INTO tblGuest (fldEmail, fldFirstName, fldLastName, fnkHotelId) VALUES ( ?, ?, ?,?)";
         print "right below here";
-        print_r($dataRecord);
-        print "<P>sql:" . $query . "<P>";
+        
+        //print "<P>sql:" . $query . "<P>";
 
         $info = $thisDatabaseWriter->insert($query, $dataRecord, 0, 0, 0, 0, false, false);
-        //$info = $thisDatabaseReader->testquery($theInsert, $dataRecord, 0, 0, 0, 0, false, false);
+
         $primaryKey = $thisDatabaseWriter->lastInsert();
+
+
+        $secondDataRecord[] = $primaryKey;
+        $thirdDataRecord[] = $primaryKey;
+
+        $thirdDataRecord[] = $giftLists;
+        //$thirdDataRecord[] =$hotelId;
+
         
-        
-        $secondDataRecord[] = $primaryKey; 
-         $thirdDataRecord[] = $primaryKey;
-         $thirdDataRecord[] = $hotelList;
-        
-        print "<p>count:" . count($dataRecord);
-        
-            
-        
-        
+
+
+
+
 
         $query2 = "INSERT INTO Attending (fldPresent, fldGrandBuffet, fldPeanutFree, fldVegan, fnkid) VALUES (?, ?, ?, ?, ?)";
 
         $info2 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 0, 0, 0, 0, false, false);
         //$info2 = $thisDatabaseReader->testquery($theInsert, $dataRecord, 0, 0, 0, 0, false, false);
+
        
-        $info3 = $thisDatabaseWriter->insert($query2, $secondDataRecord, 1, 0, 0, 0, false, false);
-        $query4= "UPDATE `tblGift` SET `fnkGuestId`= (?) WHERE fldGift = (?)";
-         
-         $info4 = $thisDatabaseWriter->update($query4, $thirdDataRecord, 0, 0, 0, 0, false, false);
-         
+
+        $query4 = "UPDATE tblGift SET fnkGuestId = ? WHERE fldGift = ?";
+        $info4 = $thisDatabaseWriter->update($query4, $thirdDataRecord, 1, 0, 0, 0, false, false);
+        //$info4 = $thisDatabaseReader->update($query4, "", 1, 0, 0, 0, false, false);
+       // $info4 = $thisDatabaseWriter->testquery($query4, $thirdDataRecord, 1, 0, 0, 0, false, false);
+
+       
 
         $fileExt = ".csv";
         $myFileName = "data/registration";
@@ -266,60 +267,60 @@ if (isset($_POST["btnSubmit"])) {
 
 <article id="main">
 
-<?php
+    <?php
 //####################################
 //
 // SECTION 3a.
-if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-    print "<h1>Your Request has ";
+    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+        print "<h1>Your Request has ";
 
-    if (!$mailed) {
-        print "not ";
-    }
+        if (!$mailed) {
+            print "not ";
+        }
 
-    print "been processed</h1>";
+        print "been processed</h1>";
 
-    print "<p>A copy of this message has ";
-    if (!$mailed) {
-        print "not ";
-    }
-    print "been sent</p>";
-    print "<p>To: " . $email . "</p>";
-    print "<p>Mail Message:</p>";
+        print "<p>A copy of this message has ";
+        if (!$mailed) {
+            print "not ";
+        }
+        print "been sent</p>";
+        print "<p>To: " . $email . "</p>";
+        print "<p>Mail Message:</p>";
 
-    print $message;
-} else {
+        print $message;
+    } else {
 
 
-    //####################################
-    //
+        //####################################
+        //
         // SECTION 3b Error Messages
-    //
+        //
         // display any error messages before we print out the form
 
-    if ($errorMsg) {
-        print '<div id="errors">';
-        print "<ol>\n";
-        foreach ($errorMsg as $err) {
-            print "<li>" . $err . "</li>\n";
+        if ($errorMsg) {
+            print '<div id="errors">';
+            print "<ol>\n";
+            foreach ($errorMsg as $err) {
+                print "<li>" . $err . "</li>\n";
+            }
+            print "</ol>\n";
+            print '</div>';
         }
-        print "</ol>\n";
-        print '</div>';
-    }
-    //####################################
-    //
+        //####################################
+        //
         // SECTION 3b Error Messages
-    //
+        //
         // 
-    //####################################
-    //
+        //####################################
+        //
         // SECTION 3c html Form
-    //
+        //
         /* Display the HTML form. note that the action is to this same page. $phpSelf
-      is defined in top.php
+          is defined in top.php
 
-     */
-    ?>
+         */
+        ?>
 
 
         <form action= "<?php print $phpSelf; ?>"
@@ -340,11 +341,11 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                             <input type="text" id="txtEmail" name="txtEmail"
                                    value="<?php print $email; ?>"
                                    tabindex="120" maxlength="45" placeholder="Enter a valid email address"
-    <?php
-    if ($emailERROR) {
-        print 'class="mistake"';
-    }
-    ?>
+                                   <?php
+                                   if ($emailERROR) {
+                                       print 'class="mistake"';
+                                   }
+                                   ?>
                                    onfocus="this.select()" 
                                    autofocus>
                         </label>
@@ -352,11 +353,11 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                             <input type="text" id="txtFirstName" name="txtFirstName"
                                    value="<?php print $firstName; ?>"
                                    tabindex="100" maxlength="45" placeholder="Enter your first name"
-    <?php
-    if ($firstNameERROR) {
-        print 'class="mistake"';
-    }
-    ?>
+                                   <?php
+                                   if ($firstNameERROR) {
+                                       print 'class="mistake"';
+                                   }
+                                   ?>
                                    onfocus="this.select()"
                                    autofocus>
                         </label>
@@ -364,11 +365,11 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                             <input type="text" id="txtLastName" name="txtLastName" 
                                    value="<?php print $lastName; ?>"
                                    tabindex="100" maxlength="45" placeholder="Enter your last name"
-    <?php
-    if ($lastNameERROR) {
-        print 'class="mistake"';
-    }
-    ?>
+                                   <?php
+                                   if ($lastNameERROR) {
+                                       print 'class="mistake"';
+                                   }
+                                   ?>
                                    onfocus="this.select()"
                                    autofocus>
                         </label>
@@ -381,11 +382,11 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                                   id="radNo"
                                   name="radConfirm"
                                   value="NO"
-    <?php
-    if ($radConfirm == "NO") {
-        print 'checked';
-    }
-    ?>
+                                  <?php
+                                  if ($radConfirm == "NO") {
+                                      print 'checked';
+                                  }
+                                  ?>
                                   tabindex="330">NO</label>
                     <label><input type="radio"
                                   id="radYes"
@@ -410,22 +411,23 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
 
                 </fieldset>
+
                 <fieldset class ="checkbox">
                     <legend>What food will you eat?</legend>
                     <label><input type="checkbox"
                                   id="chkVegan"
                                   name="chkVegan"
-                                  value="YES"
-    <?php
-    if ($vegan) {
-        print 'checked';
-    }
-    ?>
+                                  value="1"
+                                  <?php
+                                  if ($vegan) {
+                                      print 'checked';
+                                  }
+                                  ?>
                                   tabindex="420">Vegan</label>
                     <label><input type="checkbox"
                                   id="chkGrandBuffet"
                                   name="chkGrandBuffet"
-                                  value="YES"
+                                  value="1"
                                   <?php
                                   if ($grandBuffet) {
                                       print 'checked';
@@ -435,7 +437,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                     <label><input type="checkbox"
                                   id="chkPeanutFree"
                                   name="chkPeanutFree"
-                                  value="YES"
+                                  value="1"
                                   <?php
                                   if ($peanutFree) {
                                       print 'checked';
@@ -444,49 +446,48 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                                   tabindex="440">Peanut-free & gluten-free</label>
                 </fieldset>
 
-                $  
 
 
 
                 <!Here is the start of the Hotel list Box !>
                 <fieldset class ="Hotel">   
-    <?php
-    $hotelList = "";
-    require_once('../bin/Database.php');
-    $dbUserName = get_current_user() . '_reader';
+                    <?php
+                    $hotelList = "";
+                    require_once('../bin/Database.php');
+                    $dbUserName = get_current_user() . '_reader';
 
-    $whichPass = "r";
+                    $whichPass = "r";
 
-    $dbName = strtoupper(get_current_user()) . '_FinalProject';
+                    $dbName = strtoupper(get_current_user()) . '_FinalProject';
 
-    $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
+                    $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
 
-    $query7 = "SELECT DISTINCT fldHotelName, pnkHotelId FROM tblHotel ORDER BY fldHotelName";
-    //So I am going to user RObert Erickson's select function with
-    //my own variable
-    // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
-    //$dataRecord[] = $hotelList;
-    $hotelLists = $thisDatabase->select($query7, "", 0, 1, 0, 0, false, false);
+                    $query7 = "SELECT DISTINCT fldHotelName, pnkHotelId FROM tblHotel ORDER BY fldHotelName";
+                    //So I am going to user RObert Erickson's select function with
+                    //my own variable
+                    // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
+                    //$dataRecord[] = $hotelList;
+                    $hotelLists = $thisDatabase->select($query7, "", 0, 1, 0, 0, false, false);
 
-    print "<h2>List box built from Database</h2>";
+                    print "<h2>List box built from Database</h2>";
 
-    print '<label for ="lstHotelName">What Hotel Will you by staying at?? ';
-    print '<select id = "lstHotelName"';
-    print '     name = "lstHotelName"';
-    print '     tabindex="300">';
+                    print '<label for ="lstHotelName">What Hotel Will you by staying at?? ';
+                    print '<select id = "lstHotelName"';
+                    print '     name = "lstHotelName"';
+                    print '     tabindex="300">';
 
-    foreach ($hotelLists as $row) {
-        print '<option ';
-        if ($hotelLists == $row["fldHotelName"])
-            print " selected='selected' ";
+                    foreach ($hotelLists as $row) {
+                        print '<option ';
+                        if ($hotelLists == $row["fldHotelName"])
+                            print " selected='selected' ";
 
-        print 'value ="' . $row["pnkHotelId"] . '">' . $row["fldHotelName"];
+                        print 'value ="' . $row["pnkHotelId"] . '">' . $row["fldHotelName"];
 
-        print '</option>';
-    }
-    print '</select></label>';
-    print '</form>';
-    ?>
+                        print '</option>';
+                    }
+                    print '</select></label>';
+                    print '</form>';
+                    ?>
                     <fieldset>
                         <!--
                         
@@ -496,10 +497,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                                                     name = "lsthotelList"
                                                     tabindex = "520" >
                                                 <option <?php
-                if ($hotelList == "Green Mountain Inn") {
-                    print " selected ";
-                }
-                ?>
+                        if ($hotelList == "Green Mountain Inn") {
+                            print " selected ";
+                        }
+                        ?>
                                                     value="Hotel California">Hotel California</option>
                         
                                                 <option <?php
@@ -521,43 +522,42 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                                                 <fieldset class="buttons">
                                                     <legend></legend>-->
                         <fieldset class ="gift">   
-                        <?php
-                        $giftList = "Breville BES870XL Barista Express Espresso Machine";
-                        require_once('../bin/Database.php');
-                        $dbUserName = get_current_user() . '_reader';
+                            <?php
+                            //$giftList = "Breville BES870XL Barista Express Espresso Machine";
+                            require_once('../bin/Database.php');
+                            $dbUserName = get_current_user() . '_reader';
 
-                        $whichPass = "r";
+                            $whichPass = "r";
 
-                        $dbName = strtoupper(get_current_user()) . '_FinalProject';
+                            $dbName = strtoupper(get_current_user()) . '_FinalProject';
 
-                        $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
+                            $thisDatabase = new Database($dbUserName, $whichPass, $dbName);
 
-                        $query = "SELECT DISTINCT fldGift FROM tblGift ORDER BY fldGift";
-                        //So I am going to user RObert Erickson's select function with
-                        //my own variable
-                        // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
-                        //$dataRecord[] = $hotelList;
-                        $giftList = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
+                            $query = "SELECT DISTINCT fldGift, fldPrice FROM tblGift ORDER BY fldPrice";
+                            //So I am going to user RObert Erickson's select function with
+                            //my own variable
+                            // $hotelList = htmlentities($_POST["lsthotelList"], ENT_QUOTES, "UTF-8");
+                            //$dataRecord[] = $hotelList;
+                            $giftList = $thisDatabase->select($query, "", 0, 1, 0, 0, false, false);
 
-                        print "<h2>please choose a gift</h2>";
-                        print '<label for ="lstGift">What Gift Will You Be Giving?? ';
-                        print '<select id = "lstGift"';
-                        print '     name = "lstGift"';
-                        print '     tabindex="300">';
+                            print "<h2>please choose a gift</h2>";
+                            print '<label for ="lstGift">What Gift Will You Be Giving?? ';
+                            print '<select id = "lstGift"';
+                            print '     name = "lstGift"';
+                            print '     tabindex="300">';
 
-                        foreach ($giftList as $row) {
-                            print '<option ';
-                            if ($giftList == $row["fldGift"])
-                                print " selected='selected' ";
+                            foreach ($giftList as $row) {
+                                print '<option ';
+                                if ($giftList == $row["fldGift"])
+                                    print " selected='selected' ";
 
-                            print 'value ="' . $row["fldGift"] . '">' . $row["fldGift"];
+                                print 'value ="' . $row["fldGift"] . '">' . $row["fldGift"]. " $" .$row["fldPrice"];
 
-                            print '</option>';
-                        }
-                        print '</select></label>';
-                        print '</form>';
-                        
-                        ?>
+                                print '</option>';
+                            }
+                            print '</select></label>';
+                            print '</form>';
+                            ?>
 
 
                             <input type="submit" id="btnSubmit" name="btnSubmit" value="Register" tabindex="900" class="button">
@@ -572,9 +572,9 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                     <figure class = "robert">
                         <img class="small" alt="This is a great photograph!" src="ROBERT.png">
                     </figure>
-    <?php
-}
-include "footer.php";
-?>
+                    <?php
+                }
+                include "footer.php";
+                ?>
 
                 </body>

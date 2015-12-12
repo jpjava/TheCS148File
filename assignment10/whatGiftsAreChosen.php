@@ -6,30 +6,28 @@ print "<article>";
 
 print '<table>';
 
-$query = "SELECT fldHotelName, fldPhone, fldAddress, fldWebsite, fldPicture FROM tblHotel";
+$query = "SELECT fldGift, fldFirstName, fldLastName FROM tblGift, tblGuest WHERE pmkId = fnkGuestId";
     
-    $info2 = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
-    //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 4, 0, false, false);
+   $info2 = $thisDatabaseReader->select($query, "", 1, 0, 0, 0, false, false);
+   //$info2 = $thisDatabaseReader->testquery($query, "", 0, 1, 0, 0, false, false);
  
-    print "<h2>Here are the Great Hotels in the Area!</h2>";
+    print "<h2>Here is a List of all the gifts that each guest is bringing</h2>";
      
-     print "<h2>Total Hotel Options: " . count($info2) . "</h2>";
-     
-            
+     print "<h2>Total Records: " . count($info2) . "</h2>";
      
      //print r
     
-    $debug = FALSE; 
+    $debug = false; 
     
     if ($debug) 
     {
         print "<p>My array<p><pre> "; print_r($info2); print "</pre></p>";
     }
     
- 
-    $columns = 3; 
+    
+   $columns = 2; 
     $highlight = 0; // used to highlight alternate rows
-    print '<tr><th>Hotel</th><th>Phone#</th><th>Address</th><th>Website</th></tr>';   
+    print '<tr><th>Gift Chosen</th><th>Guest First Name</th><th>Guest Last Name</th></tr>';   
     foreach ($info2 as $rec) {
         $highlight++;
         if ($highlight % 2 != 0) {

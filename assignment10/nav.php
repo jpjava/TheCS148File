@@ -19,7 +19,17 @@
         if ($path_parts['filename'] == "GuestForm.php") {
             print '<li class="activePage">GuestForm.php</li>';
         } else {
-            print '<li><a href="GuestForm.php">GuestForm</a></li>';
+            print '<li><a href="GuestForm.php">Guest Form</a></li>';
+        }
+          if ($path_parts['filename'] == "SeeAllGuests.php") {
+            print '<li class="activePage">SeeAllGuests.php</li>';
+        } else {
+            print '<li><a href="SeeAllGuests.php">The Guests That Are Attending</a></li>';
+        }
+        if ($path_parts['filename'] == "whatGiftsAreChosen.php") {
+            print '<li class="activePage">whatGiftsAreChosen.php</li>';
+        } else {
+            print '<li><a href="whatGiftsAreChosen.php">The Gift Page</a></li>';
         }
        
         ?>
